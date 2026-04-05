@@ -465,58 +465,64 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 ::-webkit-scrollbar-thumb { background: rgba(160,82,45,0.2); border-radius: 3px; }
 
 @media (max-width: 768px) {
-  /* Header stacks logo on top, buttons below */
+  /* Header — logo + buttons all compact */
   .header {
     flex-direction: column;
     align-items: stretch;
-    padding: 8px 12px 6px;
-    gap: 6px;
+    padding: 6px 10px 4px;
+    gap: 4px;
   }
   .logo-area { justify-content: center; }
-  .worldpad-title { font-size: 22px; }
-  .logo-sub { font-size: 9px; }
+  .worldpad-title { font-size: 20px; }
+  .logo-sub { font-size: 9px; letter-spacing: 1px; }
 
-  /* Buttons scroll horizontally in one row */
+  /* Buttons in one centered scrollable row */
   .header-actions {
     display: flex;
-    gap: 6px;
+    gap: 5px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    padding: 2px 0 4px;
     justify-content: center;
-    padding-right: 0;
+    padding: 0 0 2px;
+    padding-right: 0 !important;
   }
   .header-actions::-webkit-scrollbar { display: none; }
-
-  .hbtn {
-    font-size: 11px;
-    padding: 6px 10px 6px 7px;
-    gap: 5px;
-    flex-shrink: 0;
-  }
-  .hbtn-icon { width: 20px; height: 20px; font-size: 11px; }
-
-  /* Hide tooltips on mobile */
+  .hbtn { font-size: 11px; padding: 5px 9px 5px 6px; gap: 4px; flex-shrink: 0; }
+  .hbtn-icon { width: 18px; height: 18px; font-size: 10px; }
   .hbtn::after, .hbtn::before { display: none !important; }
 
-  /* Globe fills width properly */
-  .hero-container { height: calc(100vh - 100px); }
-  .hero-canvas-wrap {
-    width: min(98vw, 98vmin);
-    height: min(98vw, 98vmin);
+  /* Hero — fill remaining screen height exactly */
+  .hero-container {
+    height: calc(100dvh - 88px); /* dvh = dynamic viewport height, accounts for mobile browser chrome */
+    overflow: hidden;
   }
 
-  /* Hero text card smaller */
-  .hero-text-card { padding: 14px 16px; margin: 0 10px; max-width: 95%; }
-  .hero-title { font-size: 19px; }
-  .hero-sub { font-size: 11px; }
-  .hero-pin-btn { font-size: 13px; padding: 11px 18px; }
-  .hero-explore-btn { font-size: 12px; padding: 9px 18px; }
-  .hero-hint { font-size: 10px; }
+  /* Globe — smaller so text card fits on screen */
+  .hero-canvas-wrap {
+    width: min(88vw, 88vmin);
+    height: min(88vw, 88vmin);
+    top: 42%; /* shift up slightly so card fits below */
+  }
+
+  /* Text card — smaller and fully visible */
+  .hero-overlay { padding-bottom: 3%; }
+  .hero-text-card {
+    padding: 12px 14px;
+    margin: 0 12px;
+    max-width: 92%;
+    border-radius: 16px;
+  }
+  .hero-title { font-size: 17px; margin-bottom: 4px; }
+  .hero-sub { font-size: 11px; margin-bottom: 8px; }
+  .hero-divider { margin: 8px 0; }
+  .hero-btns { gap: 8px; }
+  .hero-pin-btn { font-size: 12px; padding: 10px 16px; }
+  .hero-explore-btn { font-size: 12px; padding: 8px 16px; }
+  .hero-hint { font-size: 9px; margin-top: 6px; }
 
   /* Identity corner */
-  .identity-corner { top: 8px; right: 8px; }
+  .identity-corner { top: 6px; right: 8px; }
   .id-name { display: none; }
 
   /* Notes */
@@ -524,13 +530,11 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
   .board { padding: 10px 12px; }
   .filters { padding: 8px 12px; }
 
-  /* Modals full width */
-  .modal { margin: 8px; border-radius: 16px; max-height: 92vh; }
+  /* Modals */
+  .modal { margin: 6px; border-radius: 16px; max-height: 94vh; }
   .about-modal { border-radius: 16px; }
   .about-features { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 12px; }
   .worlds-modal { border-radius: 16px; }
-
-  /* Board */
   .board-top-row { flex-direction: column; align-items: flex-start; gap: 8px; }
   .leaderboard-panel { right: auto; left: 0; width: calc(100vw - 24px); }
 }
