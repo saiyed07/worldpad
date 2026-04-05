@@ -1094,6 +1094,28 @@ function HeroEmpty({ onPin, onExplore }) {
         if (idx !== -1) { noteData[idx].popped = !noteData[idx].popped; noteData[idx].targetPopScale = noteData[idx].popped ? 2.2 : 1 }
       }
     }
+
+    // ── Touch events for mobile ──
+    const onTouchStart = e => {
+      e.preventDefault()
+      const t = e.touches[0]
+      isDragging = true
+      prevMouse = { x: t.clientX, y: t.clientY }
+      dragVX = dragVY = 0
+      targetSpeed = 0.003
+    }
+    const onTouchMove = e => {
+      e.preventDefault()
+      if (!isDragging) return
+      const t = e.touches[0]
+      const dx = t.clientX - prevMouse.x
+      const dy = t.clientY - prevMouse.y
+      dragVX = dy * 0.009; dragVY = dx * 0.009
+      globe.rotation.x += dragVX; globe.rotation.y += dragVY
+      prevMouse = { x: t.clientX, y: t.clientY }
+    }
+    const onTouchEnd = () => { isDragging = false }
+
     const onResize = () => { camera.aspect = 1; camera.updateProjectionMatrix(); renderer.setSize(W(), H()) }
 
     canvas.addEventListener('mouseenter', onEnter)
@@ -1103,6 +1125,11 @@ function HeroEmpty({ onPin, onExplore }) {
     canvas.addEventListener('click',      onClick)
     window.addEventListener('mouseup',    onUp)
     window.addEventListener('resize',     onResize)
+
+    // Touch listeners
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false })
+    canvas.addEventListener('touchmove',  onTouchMove,  { passive: false })
+    canvas.addEventListener('touchend',   onTouchEnd)
 
     // ── Animate ──
     let t = 0
@@ -1134,6 +1161,9 @@ function HeroEmpty({ onPin, onExplore }) {
       canvas.removeEventListener('click',      onClick)
       window.removeEventListener('mouseup',    onUp)
       window.removeEventListener('resize',     onResize)
+      canvas.removeEventListener('touchstart', onTouchStart)
+      canvas.removeEventListener('touchmove',  onTouchMove)
+      canvas.removeEventListener('touchend',   onTouchEnd)
     }
   }, [])
 

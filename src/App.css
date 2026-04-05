@@ -465,70 +465,74 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 ::-webkit-scrollbar-thumb { background: rgba(160,82,45,0.2); border-radius: 3px; }
 
 @media (max-width: 768px) {
-  /* Header — compact on mobile */
-  .header { padding: 8px 12px; gap: 6px; flex-wrap: nowrap; }
-  .logo-area { flex-shrink: 0; }
-  .worldpad-title { font-size: 20px; }
-  .logo-sub { display: none; }
-  .worldmap-wrap { transform: scale(0.7); transform-origin: left center; }
+  /* Header stacks logo on top, buttons below */
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px 12px 6px;
+    gap: 6px;
+  }
+  .logo-area { justify-content: center; }
+  .worldpad-title { font-size: 22px; }
+  .logo-sub { font-size: 9px; }
 
-  /* Header buttons — smaller, horizontal scroll */
+  /* Buttons scroll horizontally in one row */
   .header-actions {
     display: flex;
     gap: 6px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    padding-bottom: 2px;
-    flex-shrink: 1;
+    padding: 2px 0 4px;
+    justify-content: center;
+    padding-right: 0;
   }
   .header-actions::-webkit-scrollbar { display: none; }
 
   .hbtn {
     font-size: 11px;
-    padding: 6px 10px;
-    gap: 4px;
-    white-space: nowrap;
+    padding: 6px 10px 6px 7px;
+    gap: 5px;
     flex-shrink: 0;
   }
-  .hbtn-icon { width: 20px; height: 20px; font-size: 12px; }
+  .hbtn-icon { width: 20px; height: 20px; font-size: 11px; }
 
-  /* Hide tooltips on mobile — no hover */
-  .hbtn::after, .hbtn::before { display: none; }
+  /* Hide tooltips on mobile */
+  .hbtn::after, .hbtn::before { display: none !important; }
+
+  /* Globe fills width properly */
+  .hero-container { height: calc(100vh - 100px); }
+  .hero-canvas-wrap {
+    width: min(98vw, 98vmin);
+    height: min(98vw, 98vmin);
+  }
+
+  /* Hero text card smaller */
+  .hero-text-card { padding: 14px 16px; margin: 0 10px; max-width: 95%; }
+  .hero-title { font-size: 19px; }
+  .hero-sub { font-size: 11px; }
+  .hero-pin-btn { font-size: 13px; padding: 11px 18px; }
+  .hero-explore-btn { font-size: 12px; padding: 9px 18px; }
+  .hero-hint { font-size: 10px; }
 
   /* Identity corner */
+  .identity-corner { top: 8px; right: 8px; }
   .id-name { display: none; }
-  .identity-corner { top: 8px; right: 10px; }
 
-  /* Globe hero */
-  .hero-canvas-wrap {
-    width: 98vw;
-    height: 98vw;
-  }
-  .hero-container { height: calc(100vh - 60px); }
-  .hero-title { font-size: 22px; }
-  .hero-sub { font-size: 12px; }
-  .hero-text-card { padding: 16px; margin: 0 8px; }
-  .hero-pin-btn { font-size: 14px; padding: 12px 20px; }
-
-  /* Notes grid */
-  .notes-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-  .board { padding: 12px; }
+  /* Notes */
+  .notes-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .board { padding: 10px 12px; }
   .filters { padding: 8px 12px; }
 
-  /* About modal */
-  .about-features { grid-template-columns: repeat(2, 1fr); }
+  /* Modals full width */
+  .modal { margin: 8px; border-radius: 16px; max-height: 92vh; }
   .about-modal { border-radius: 16px; }
-
-  /* Worlds modal */
+  .about-features { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 12px; }
   .worlds-modal { border-radius: 16px; }
 
-  /* Note modal */
-  .modal { margin: 8px; border-radius: 16px; }
-
-  /* Board top row */
-  .board-top-row { flex-direction: column; align-items: flex-start; }
-  .leaderboard-panel { right: auto; left: 0; width: calc(100vw - 32px); }
+  /* Board */
+  .board-top-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .leaderboard-panel { right: auto; left: 0; width: calc(100vw - 24px); }
 }
 
 /* ── HERO EMPTY STATE ── */
@@ -798,11 +802,12 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
   mask-image: radial-gradient(ellipse 48% 52% at 50% 50%, transparent 55%, black 80%);
 }
 
-/* Clip wrapper — circles the canvas so corners show the pattern */
+/* Clip wrapper — perfectly square circle */
 .hero-canvas-wrap {
   position: absolute;
-  width: min(105%, calc(105vh - 90px));
-  height: min(105%, calc(105vh - 90px));
+  /* Use vmin so it's always square on any screen */
+  width: min(100vmin, calc(100vh - 90px));
+  height: min(100vmin, calc(100vh - 90px));
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
