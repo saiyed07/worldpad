@@ -21,16 +21,16 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 }
 
 /* ── HEADER ── */
-.header {
-  position: sticky; top: 0; z-index: 100;
+.header { position: sticky; top: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 24px; flex-wrap: wrap; gap: 12px;
-  background: rgba(255,224,204,0.85); backdrop-filter: blur(20px);
+  padding: 10px 16px; flex-wrap: nowrap; gap: 8px;
+  background: rgba(255,224,204,0.92); backdrop-filter: blur(20px);
   border-bottom: 2px solid rgba(160,82,45,0.12);
   box-shadow: 0 2px 24px rgba(160,82,45,0.08);
   overflow: visible;
 }
-
+.header-actions { display: flex; gap: 6px; align-items: center; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-right: 90px; }
+.header-actions::-webkit-scrollbar { display: none; }
 .logo-area { display: flex; align-items: center; gap: 14px; }
 
 /* ── GLOBE ── */
@@ -58,10 +58,10 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 
 .hbtn {
   font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 13px;
-  padding: 10px 20px 10px 10px; border-radius: 100px; cursor: pointer;
-  display: flex; align-items: center; gap: 9px;
+  padding: 8px 14px 8px 8px; border-radius: 100px; cursor: pointer;
+  display: flex; align-items: center; gap: 7px;
   transition: transform 0.12s, box-shadow 0.12s;
-  white-space: nowrap; appearance: none;
+  white-space: nowrap; appearance: none; flex-shrink: 0;
 }
 .hbtn:hover  { transform: translateY(-3px); }
 .hbtn:active { transform: translateY(3px); }
