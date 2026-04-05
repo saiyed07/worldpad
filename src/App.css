@@ -464,14 +464,71 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(160,82,45,0.2); border-radius: 3px; }
 
-@media (max-width: 600px) {
-  .header { padding: 10px 16px; }
-  .worldpad-title { font-size: 28px; }
-  .notes-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
-  .board { padding: 14px 16px; }
-  .filters { padding: 10px 16px; }
+@media (max-width: 768px) {
+  /* Header — compact on mobile */
+  .header { padding: 8px 12px; gap: 6px; flex-wrap: nowrap; }
+  .logo-area { flex-shrink: 0; }
+  .worldpad-title { font-size: 20px; }
+  .logo-sub { display: none; }
+  .worldmap-wrap { transform: scale(0.7); transform-origin: left center; }
+
+  /* Header buttons — smaller, horizontal scroll */
+  .header-actions {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+    flex-shrink: 1;
+  }
+  .header-actions::-webkit-scrollbar { display: none; }
+
+  .hbtn {
+    font-size: 11px;
+    padding: 6px 10px;
+    gap: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .hbtn-icon { width: 20px; height: 20px; font-size: 12px; }
+
+  /* Hide tooltips on mobile — no hover */
+  .hbtn::after, .hbtn::before { display: none; }
+
+  /* Identity corner */
   .id-name { display: none; }
-  .identity-corner { top: 10px; right: 12px; }
+  .identity-corner { top: 8px; right: 10px; }
+
+  /* Globe hero */
+  .hero-canvas-wrap {
+    width: 98vw;
+    height: 98vw;
+  }
+  .hero-container { height: calc(100vh - 60px); }
+  .hero-title { font-size: 22px; }
+  .hero-sub { font-size: 12px; }
+  .hero-text-card { padding: 16px; margin: 0 8px; }
+  .hero-pin-btn { font-size: 14px; padding: 12px 20px; }
+
+  /* Notes grid */
+  .notes-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .board { padding: 12px; }
+  .filters { padding: 8px 12px; }
+
+  /* About modal */
+  .about-features { grid-template-columns: repeat(2, 1fr); }
+  .about-modal { border-radius: 16px; }
+
+  /* Worlds modal */
+  .worlds-modal { border-radius: 16px; }
+
+  /* Note modal */
+  .modal { margin: 8px; border-radius: 16px; }
+
+  /* Board top row */
+  .board-top-row { flex-direction: column; align-items: flex-start; }
+  .leaderboard-panel { right: auto; left: 0; width: calc(100vw - 32px); }
 }
 
 /* ── HERO EMPTY STATE ── */
@@ -1090,8 +1147,7 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 @media (max-width: 600px) {
   .about-features { grid-template-columns: repeat(2, 1fr); }
   .hero-container { height: calc(100vh - 70px); }
-}
-/* floating suggest button removed */
+}/* floating suggest button removed */
 
 /* ── HEADER BUTTON TOOLTIPS ── */
 .hbtn { position: relative; }
