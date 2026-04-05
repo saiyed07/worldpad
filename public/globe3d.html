@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Worldpad Globe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#fde8d8;overflow:hidden;font-family:'Nunito',sans-serif}
+  #app{position:relative;width:100vw;height:100vh}
+  canvas{position:absolute;inset:0;width:100%!important;height:100%!important}
+
+  /* background pattern */
+  #app::before{
+    content:'';position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0.1;
+    background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23a0522d'%3E%3Ccircle cx='16' cy='12' r='5'/%3E%3Crect x='14.5' y='16' width='3' height='7' rx='1'/%3E%3Cpath d='M55 5l1.6 5H62l-4.2 3 1.6 5L55 15l-4.4 3 1.6-5L48 10h5.4z'/%3E%3Crect x='4' y='45' width='18' height='14' rx='2'/%3E%3Cpath d='M34 38c0 0-6-4-6-8a4 4 0 0 1 6-2.2A4 4 0 0 1 40 30c0 4-6 8-6 8z'/%3E%3Crect x='48' y='50' width='20' height='12' rx='4'/%3E%3Cpath d='M52 62l-2 4 5-4z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size:80px 80px;
+  }
+
+  /* overlay UI */
+  .overlay{
+    position:absolute;inset:0;z-index:10;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:12px;pointer-events:none;
+    background:radial-gradient(ellipse at center,rgba(253,232,216,0) 20%,rgba(253,232,216,0.45) 100%);
+  }
+  .title{
+    font-family:'Pacifico',cursive;font-size:clamp(24px,4vw,42px);
+    color:#2d3a6b;text-align:center;
+    text-shadow:0 2px 16px rgba(255,255,255,1),0 1px 4px rgba(0,0,0,0.06);
+    line-height:1.2;
+  }
+  .sub{
+    font-size:clamp(12px,1.6vw,16px);font-weight:800;
+    color:rgba(100,50,10,0.65);text-align:center;max-width:420px;
+    text-shadow:0 1px 8px rgba(255,255,255,0.95);line-height:1.6;padding:0 20px;
+  }
+  .btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;pointer-events:all;margin-top:4px}
+  .btn{
+    font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:clamp(12px,1.4vw,15px);
+    padding:13px 26px 13px 16px;border-radius:100px;border:none;cursor:pointer;
+    display:flex;align-items:center;gap:10px;
+    transition:transform .12s,box-shadow .12s;letter-spacing:.3px;
+  }
+  .btn:hover{transform:translateY(-4px)}
+  .btn:active{transform:translateY(2px)}
+  .btn-pin{
+    background:#d4816a;color:#fff;
+    border:2.5px solid #7a3525;
+    box-shadow:0 5px 0 #7a3525,0 8px 24px rgba(212,129,106,0.45);
+    animation:btnfloat 3s ease-in-out infinite alternate;
+  }
+  @keyframes btnfloat{
+    from{box-shadow:0 5px 0 #7a3525,0 8px 24px rgba(212,129,106,0.45)}
+    to{transform:translateY(-4px);box-shadow:0 9px 0 #7a3525,0 14px 32px rgba(212,129,106,0.55)}
+  }
+  .btn-pin:hover{animation:none;box-shadow:0 7px 0 #7a3525,0 12px 30px rgba(212,129,106,0.6)!important}
+  .btn-explore{
+    background:#9b7ec8;color:#fff;
+    border:2.5px solid #4a2d80;
+    box-shadow:0 5px 0 #4a2d80,0 8px 20px rgba(155,126,200,0.4);
+  }
+  .btn-explore:hover{box-shadow:0 7px 0 #4a2d80,0 12px 28px rgba(155,126,200,0.5)}
+  .ico{
+    width:26px;height:26px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;border:1.5px solid rgba(255,255,255,0.65);flex-shrink:0;
+  }
+  .ico-pin{background:#f5c4b8}
+  .ico-exp{background:#d8c8f0}
+  .hint{
+    font-size:12px;font-weight:800;color:rgba(100,50,10,0.4);
+    text-shadow:0 1px 6px rgba(255,255,255,0.9);
+    animation:hintp 4s ease-in-out infinite alternate;
+  }
+  @keyframes hintp{from{opacity:.5}to{opacity:1}}
+
+  /* sparkles */
+  .sp{position:absolute;z-index:5;font-size:18px;color:rgba(212,129,106,0.45);pointer-events:none;animation:spk 3s ease-in-out infinite}
+  .sp1{top:15%;left:12%;animation-delay:0s}
+  .sp2{top:20%;right:12%;font-size:13px;color:rgba(155,126,200,0.45);animation-delay:1.4s}
+  .sp3{bottom:25%;left:20%;font-size:11px;animation-delay:.7s}
+  .sp4{bottom:18%;right:18%;font-size:15px;color:rgba(155,126,200,0.4);animation-delay:2s}
+  @keyframes spk{0%,100%{opacity:.3;transform:scale(1) rotate(0deg)}50%{opacity:1;transform:scale(1.5) rotate(180deg)}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c"></canvas>
+
+  <!-- Sparkles -->
+  <div class="sp sp1">✦</div>
+  <div class="sp sp2">✦</div>
+  <div class="sp sp3">✦</div>
+  <div class="sp sp4">✦</div>
+
+  <!-- Overlay UI -->
+  <div class="overlay">
+    <div class="title">A World of Thoughts Awaits.</div>
+    <div class="sub">Explore ideas, unique perspectives &amp; unexpected connections from every corner of the globe.</div>
+    <div class="btns">
+      <button class="btn btn-pin" onclick="window.location.href='/'">
+        <div class="ico ico-pin">📌</div>
+        PIN THE FIRST NOTE!
+      </button>
+      <button class="btn btn-explore" onclick="window.location.href='/'">
+        <div class="ico ico-exp">🌍</div>
+        See Random Notes
+      </button>
+    </div>
+    <div class="hint">🖱 Drag to rotate &nbsp;·&nbsp; Hover to pop notes outward</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const canvas = document.getElementById('c');
+  const W = window.innerWidth, H = window.innerHeight;
+
+  // ── RENDERER ──
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setClearColor(0xfde8d8, 1);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  // ── SCENE + CAMERA ──
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0xfde8d8, 0.028);
+
+  const camera = new THREE.PerspectiveCamera(42, W/H, 0.1, 100);
+  camera.position.z = 6.5;
+
+  // ── LIGHTS ──
+  // Warm ambient
+  scene.add(new THREE.AmbientLight(0xfff5ee, 0.85));
+
+  // Orbiting key light (warm)
+  const keyLight = new THREE.PointLight(0xffe8cc, 3.2, 30);
+  keyLight.position.set(5, 6, 5);
+  keyLight.castShadow = true;
+  scene.add(keyLight);
+
+  // Fill (cool blue)
+  const fillLight = new THREE.PointLight(0xaaccff, 1.5, 22);
+  fillLight.position.set(-5, -3, 4);
+  scene.add(fillLight);
+
+  // Rim (purple, from behind)
+  const rimLight = new THREE.PointLight(0xddbbff, 1.2, 20);
+  rimLight.position.set(0, -4, -7);
+  scene.add(rimLight);
+
+  // ── GLOBE GROUP ──
+  const G = new THREE.Group();
+  scene.add(G);
+
+  // Wireframe sphere (subtle grid)
+  G.add(new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.SphereGeometry(2, 22, 22)),
+    new THREE.LineBasicMaterial({ color: 0x88aacc, transparent: true, opacity: 0.14 })
+  ));
+
+  // Inner translucent glow sphere
+  G.add(new THREE.Mesh(
+    new THREE.SphereGeometry(1.96, 32, 32),
+    new THREE.MeshStandardMaterial({ color: 0x88bbdd, transparent: true, opacity: 0.07, roughness: 0.15 })
+  ));
+
+  // Outer glow halo
+  G.add(new THREE.Mesh(
+    new THREE.SphereGeometry(2.1, 16, 16),
+    new THREE.MeshBasicMaterial({ color: 0xccddff, transparent: true, opacity: 0.025, side: THREE.BackSide })
+  ));
+
+  // ── STICKY NOTES — 100 notes via Fibonacci sphere ──
+  const COLORS = [
+    0xFFEB3B, // yellow
+    0xFF8A80, // pink
+    0x82B1FF, // blue
+    0xCCFF90, // lime
+    0xEA80FC, // purple
+    0xFFD180, // peach
+    0xA7FFEB, // mint
+    0xFF80AB, // hot pink
+    0x80D8FF, // sky blue
+    0xF4FF81, // yellow-green
+  ];
+
+  const notes = [];
+  const dirs  = [];
+  const N     = 100;
+  const R     = 2.06;
+  const GA    = Math.PI * (3 - Math.sqrt(5)); // golden angle
+
+  for (let i = 0; i < N; i++) {
+    // Fibonacci sphere distribution
+    const y  = 1 - (i / (N - 1)) * 2;
+    const r  = Math.sqrt(Math.max(0, 1 - y * y));
+    const th = GA * i;
+    const dir = new THREE.Vector3(Math.cos(th) * r, y, Math.sin(th) * r).normalize();
+    const pos = dir.clone().multiplyScalar(R);
+
+    // Slightly varied note size
+    const nw = 0.22 + Math.random() * 0.10;
+    const nh = 0.17 + Math.random() * 0.07;
+
+    const mat = new THREE.MeshStandardMaterial({
+      color     : COLORS[i % COLORS.length],
+      roughness : 0.78,
+      metalness : 0.02,
+      side      : THREE.DoubleSide,
+    });
+
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(nw, nh), mat);
+    mesh.position.copy(pos);
+    mesh.lookAt(0, 0, 0);
+    mesh.rotateY(Math.PI); // face outward
+    mesh.rotateZ((Math.random() - 0.5) * 0.55); // random tilt
+
+    // Lines on note (ruled paper effect)
+    const lineGeo = new THREE.BufferGeometry();
+    const lv = new Float32Array([
+      -nw/2+0.02, nh/2-0.05, 0.001,
+       nw/2-0.02, nh/2-0.05, 0.001,
+      -nw/2+0.02, 0,          0.001,
+       nw/2-0.02, 0,          0.001,
+      -nw/2+0.02, -(nh/2-0.05), 0.001,
+       nw/2-0.06, -(nh/2-0.05), 0.001,
+    ]);
+    lineGeo.setAttribute('position', new THREE.BufferAttribute(lv, 3));
+    const lineMat = new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.2 });
+    const lines = new THREE.LineSegments(lineGeo, lineMat);
+    mesh.add(lines);
+
+    // Tiny fold corner
+    const foldGeo = new THREE.BufferGeometry();
+    const fw = nw * 0.2, fh = nh * 0.2;
+    const fv = new Float32Array([-nw/2, nh/2, 0.001,  -nw/2+fw, nh/2, 0.001,  -nw/2, nh/2-fh, 0.001]);
+    foldGeo.setAttribute('position', new THREE.BufferAttribute(fv, 3));
+    const foldMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.1, side: THREE.DoubleSide });
+    mesh.add(new THREE.Mesh(foldGeo, foldMat));
+
+    G.add(mesh);
+    notes.push(mesh);
+    dirs.push(dir);
+  }
+
+  // ── INTERACTION ──
+  let isDragging = false;
+  let prevMouse  = { x: 0, y: 0 };
+  let velX = 0, velY = 0;
+  let isHovering = false;
+  let hoverT = 0;
+
+  canvas.addEventListener('mousedown', e => {
+    isDragging = true;
+    prevMouse = { x: e.clientX, y: e.clientY };
+    velX = velY = 0;
+    canvas.style.cursor = 'grabbing';
+  });
+  window.addEventListener('mouseup', () => { isDragging = false; canvas.style.cursor = 'grab'; });
+
+  canvas.addEventListener('mousemove', e => {
+    isHovering = true;
+    if (isDragging) {
+      velY = (e.clientX - prevMouse.x) * 0.009;
+      velX = (e.clientY - prevMouse.y) * 0.009;
+      G.rotation.y += velY;
+      G.rotation.x += velX;
+      prevMouse = { x: e.clientX, y: e.clientY };
+    }
+  });
+  canvas.addEventListener('mouseleave', () => { isHovering = false; });
+
+  // Touch
+  let lastTouch = null;
+  canvas.addEventListener('touchstart', e => {
+    lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    isDragging = true;
+  }, { passive: true });
+  canvas.addEventListener('touchmove', e => {
+    if (!lastTouch) return;
+    velY = (e.touches[0].clientX - lastTouch.x) * 0.009;
+    velX = (e.touches[0].clientY - lastTouch.y) * 0.009;
+    G.rotation.y += velY; G.rotation.x += velX;
+    lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, { passive: true });
+  canvas.addEventListener('touchend', () => { isDragging = false; lastTouch = null; });
+
+  // ── ANIMATION LOOP ──
+  const clock = new THREE.Clock();
+  const emissiveColor = new THREE.Color();
+
+  (function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    const t  = clock.getElapsedTime();
+
+    // Auto-rotate or inertia
+    if (!isDragging) {
+      const speed = isHovering ? 0.015 : 0.004;
+      G.rotation.y += speed;
+      G.rotation.x *= 0.95;
+      velX *= 0.9; velY *= 0.9;
+    }
+
+    // Hover pop transition
+    hoverT = Math.max(0, Math.min(1, hoverT + (isHovering ? dt * 2.5 : -dt * 3)));
+
+    // Animate each note
+    notes.forEach((note, i) => {
+      const wave = Math.sin(t * 1.5 + i * 0.2) * 0.038;
+      const pop  = hoverT * 0.25;
+      note.position.copy(dirs[i]).multiplyScalar(R + wave + pop);
+
+      // Emissive glow on hover
+      emissiveColor.set(note.material.color).multiplyScalar(isHovering ? 0.22 : 0);
+      note.material.emissive.copy(emissiveColor);
+
+      // Slight scale pop
+      const s = 1 + hoverT * 0.06 + Math.sin(t * 1.2 + i * 0.3) * 0.015;
+      note.scale.setScalar(s);
+    });
+
+    // Orbit key light
+    keyLight.position.set(Math.cos(t * 0.38) * 6, 5, Math.sin(t * 0.38) * 5);
+    fillLight.position.set(Math.cos(t * 0.22 + Math.PI) * 5, -3, Math.sin(t * 0.22 + Math.PI) * 4);
+
+    renderer.render(scene, camera);
+  })();
+
+  // Resize
+  window.addEventListener('resize', () => {
+    const w = window.innerWidth, h = window.innerHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+
+  canvas.style.cursor = 'grab';
+})();
+</script>
+</body>
+</html>
