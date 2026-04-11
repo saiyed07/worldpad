@@ -481,21 +481,18 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
     padding: 0 !important;
   }
   .hbtn {
-    font-size: 8px !important;
-    padding: 4px 4px !important;
+    font-size: 8.5px !important;
+    padding: 4px 5px !important;
     gap: 2px !important;
     flex: 1 1 0 !important;
     min-width: 0 !important;
     justify-content: center !important;
     border-radius: 50px !important;
     box-shadow: none !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
   }
-  /* Hide text labels on smallest screens, show only icons */
-  @media (max-width: 400px) {
-    .hbtn { font-size: 0 !important; padding: 6px !important; }
-    .hbtn-icon { width: 18px !important; height: 18px !important; font-size: 12px !important; margin: 0 !important; }
-  }
-  .hbtn-icon { width: 13px !important; height: 13px !important; font-size: 8px !important; flex-shrink: 0 !important; }
+  .hbtn-icon { width: 14px !important; height: 14px !important; font-size: 8px !important; flex-shrink: 0 !important; }
   .hbtn::after, .hbtn::before { display: none !important; }
 
   .identity-corner { top: 4px; right: 6px; transform: scale(0.8); transform-origin: top right; }

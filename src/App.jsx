@@ -766,13 +766,13 @@ function HeroEmpty({ onPin, onExplore }) {
       tc.width = TEX_W; tc.height = TEX_H
       const cx = tc.getContext('2d')
 
-      // Darker cyan-blue ocean
+      // Deep navy blue ocean
       const oceanGrad = cx.createLinearGradient(0, 0, 0, TEX_H)
-      oceanGrad.addColorStop(0,   '#006978')
-      oceanGrad.addColorStop(0.3, '#00838f')
-      oceanGrad.addColorStop(0.5, '#0097a7')
-      oceanGrad.addColorStop(0.7, '#00838f')
-      oceanGrad.addColorStop(1,   '#005662')
+      oceanGrad.addColorStop(0,   '#013d6e')
+      oceanGrad.addColorStop(0.3, '#01579b')
+      oceanGrad.addColorStop(0.5, '#0164b0')
+      oceanGrad.addColorStop(0.7, '#01579b')
+      oceanGrad.addColorStop(1,   '#012f5a')
       cx.fillStyle = oceanGrad
       cx.fillRect(0, 0, TEX_W, TEX_H)
 
@@ -1751,7 +1751,10 @@ export default function App() {
 
   return (
     <div className="app">
-      <IdentityCorner user={user} onUpdate={handleUserUpdate}/>
+      {/* Hide identity corner when any modal is open */}
+      {!showNewNote && !showAbout && !showWorlds && !selectedNote && (
+        <IdentityCorner user={user} onUpdate={handleUserUpdate}/>
+      )}
 
       {/* ── SLIM HEADER (logo only, no clutter) ── */}
       <header className="header">
