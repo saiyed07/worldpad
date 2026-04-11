@@ -783,9 +783,9 @@ function HeroEmpty({ onPin, onExplore }) {
       cx.fillRect(TEX_W * 0.85, 0, TEX_W * 0.15, TEX_H)
 
       // Land helper — [lat, lon] in equirectangular
-      const lp = (pts, color = '#4caf50') => {
+      const lp = (pts, color = '#1b5e20') => {
         cx.fillStyle = color
-        cx.strokeStyle = '#2e7d32'
+        cx.strokeStyle = '#0a3d12'
         cx.lineWidth = 3
         cx.beginPath()
         pts.forEach(([lat, lon], i) => {
@@ -796,8 +796,8 @@ function HeroEmpty({ onPin, onExplore }) {
         cx.closePath(); cx.fill(); cx.stroke()
       }
 
-      const G = '#4caf50'  // green land
-      const LG = '#66bb6a' // lighter green
+      const G = '#1b5e20'  // dark forest green land
+      const LG = '#2e7d32' // slightly lighter dark green
 
       // ── NORTH AMERICA ──
       lp([[70,-140],[72,-120],[75,-100],[70,-80],[60,-65],[50,-55],[45,-53],
@@ -840,7 +840,7 @@ function HeroEmpty({ onPin, onExplore }) {
 
       // ── RUSSIA/SIBERIA extra ──
       lp([[68,32],[70,50],[70,80],[68,100],[65,120],[60,140],[58,130],
-          [60,110],[62,90],[65,70],[68,50],[68,32]], '#43a047')
+          [60,110],[62,90],[65,70],[68,50],[68,32]], '#1b5e20')
 
       // Polar regions — DARK TEAL/BLUE not white!
       // North pole (Arctic ocean — just dark blue, already covered)
