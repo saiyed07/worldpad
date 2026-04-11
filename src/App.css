@@ -465,10 +465,10 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 ::-webkit-scrollbar-thumb { background: rgba(160,82,45,0.2); border-radius: 3px; }
 
 @media (max-width: 768px) {
-  /* Header — logo + buttons all compact */
+  /* Header */
   .header {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     padding: 6px 10px 4px;
     gap: 4px;
   }
@@ -476,15 +476,17 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
   .worldpad-title { font-size: 20px; }
   .logo-sub { font-size: 9px; letter-spacing: 1px; }
 
-  /* Buttons in one centered scrollable row */
+  /* ALL buttons in ONE scrollable row — no wrapping */
   .header-actions {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
     gap: 5px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    justify-content: center;
-    padding: 0 0 2px;
+    width: 100%;
+    padding: 0 4px 2px;
     padding-right: 0 !important;
   }
   .header-actions::-webkit-scrollbar { display: none; }
@@ -492,38 +494,32 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
   .hbtn-icon { width: 18px; height: 18px; font-size: 10px; }
   .hbtn::after, .hbtn::before { display: none !important; }
 
-  /* Hero — fill remaining screen height exactly */
-  .hero-container {
-    height: calc(100dvh - 88px); /* dvh = dynamic viewport height, accounts for mobile browser chrome */
-    overflow: hidden;
-  }
-
-  /* Globe — smaller so text card fits on screen */
-  .hero-canvas-wrap {
-    width: min(88vw, 88vmin);
-    height: min(88vw, 88vmin);
-    top: 42%; /* shift up slightly so card fits below */
-  }
-
-  /* Text card — smaller and fully visible */
-  .hero-overlay { padding-bottom: 3%; }
-  .hero-text-card {
-    padding: 12px 14px;
-    margin: 0 12px;
-    max-width: 92%;
-    border-radius: 16px;
-  }
-  .hero-title { font-size: 17px; margin-bottom: 4px; }
-  .hero-sub { font-size: 11px; margin-bottom: 8px; }
-  .hero-divider { margin: 8px 0; }
-  .hero-btns { gap: 8px; }
-  .hero-pin-btn { font-size: 12px; padding: 10px 16px; }
-  .hero-explore-btn { font-size: 12px; padding: 8px 16px; }
-  .hero-hint { font-size: 9px; margin-top: 6px; }
-
-  /* Identity corner */
+  /* Identity */
   .identity-corner { top: 6px; right: 8px; }
   .id-name { display: none; }
+
+  /* Hero — fit exactly on screen */
+  .hero-container { height: calc(100svh - 90px); overflow: hidden; }
+
+  /* Globe — perfect square, shifted up */
+  .hero-canvas-wrap {
+    width: 78vmin !important;
+    height: 78vmin !important;
+    top: 36% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  /* Card compact at bottom */
+  .hero-overlay { justify-content: flex-end; padding-bottom: 2%; }
+  .hero-text-card { padding: 10px 14px; margin: 0 8px; max-width: 96%; border-radius: 14px; width: 100%; }
+  .hero-title { font-size: 17px; margin-bottom: 3px; }
+  .hero-sub { font-size: 10px; margin-bottom: 6px; }
+  .hero-divider { margin: 5px 0; }
+  .hero-btns { gap: 6px; }
+  .hero-pin-btn { font-size: 12px; padding: 9px 14px; }
+  .hero-explore-btn { font-size: 12px; padding: 8px 14px; }
+  .hero-hint { font-size: 9px; margin-top: 4px; }
 
   /* Notes */
   .notes-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
