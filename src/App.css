@@ -465,56 +465,69 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 ::-webkit-scrollbar-thumb { background: rgba(160,82,45,0.2); border-radius: 3px; }
 
 @media (max-width: 768px) {
-  .header { flex-direction: column; align-items: center; padding: 5px 8px 4px; gap: 3px; }
+  .header { flex-direction: column; align-items: center; padding: 4px 6px 3px; gap: 3px; }
   .logo-area { justify-content: center; }
-  .worldpad-title { font-size: 17px; }
-  .logo-sub { font-size: 8px; letter-spacing: 1px; }
+  .worldpad-title { font-size: 16px; }
+  .logo-sub { font-size: 7px; letter-spacing: 1px; }
 
-  /* ALL 5 buttons fit in ONE row — no scrolling, no wrapping */
+  /* ALL 5 buttons — same row, same width, no overflow */
   .header-actions {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     gap: 3px !important;
     width: 100% !important;
-    overflow: visible !important;
-    justify-content: center !important;
+    overflow: hidden !important;
     padding: 0 !important;
   }
   .hbtn {
-    font-size: 9px !important;
-    padding: 4px 6px !important;
+    font-size: 8px !important;
+    padding: 4px 4px !important;
     gap: 2px !important;
     flex: 1 1 0 !important;
     min-width: 0 !important;
-    max-width: 72px !important;
     justify-content: center !important;
     border-radius: 50px !important;
+    box-shadow: none !important;
   }
-  .hbtn-icon { width: 14px !important; height: 14px !important; font-size: 8px !important; }
+  /* Hide text labels on smallest screens, show only icons */
+  @media (max-width: 400px) {
+    .hbtn { font-size: 0 !important; padding: 6px !important; }
+    .hbtn-icon { width: 18px !important; height: 18px !important; font-size: 12px !important; margin: 0 !important; }
+  }
+  .hbtn-icon { width: 13px !important; height: 13px !important; font-size: 8px !important; flex-shrink: 0 !important; }
   .hbtn::after, .hbtn::before { display: none !important; }
 
-  .identity-corner { top: 5px; right: 6px; }
+  .identity-corner { top: 4px; right: 6px; transform: scale(0.8); transform-origin: top right; }
   .id-name { display: none; }
 
+  /* Hero — total height minus header (~84px) */
   .hero-container { height: calc(100svh - 84px); overflow: hidden; }
+
+  /* Globe — 60% of screen width, shifted to top third */
   .hero-canvas-wrap {
-    width: 74vmin !important;
-    height: 74vmin !important;
-    top: 34% !important;
+    width: 62vmin !important;
+    height: 62vmin !important;
+    top: 30% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
   }
 
-  .hero-overlay { justify-content: flex-end; padding-bottom: 2%; }
-  .hero-text-card { padding: 10px 12px; margin: 0 8px; border-radius: 14px; width: calc(100% - 16px); }
-  .hero-title { font-size: 16px; margin-bottom: 3px; }
-  .hero-sub { font-size: 10px; margin-bottom: 6px; }
-  .hero-divider { margin: 5px 0; }
-  .hero-btns { gap: 6px; }
-  .hero-pin-btn { font-size: 12px; padding: 9px 14px; }
-  .hero-explore-btn { font-size: 12px; padding: 8px 14px; }
-  .hero-hint { font-size: 9px; margin-top: 4px; }
+  /* Card — fully visible at bottom */
+  .hero-overlay { justify-content: flex-end; padding-bottom: 1%; }
+  .hero-text-card {
+    padding: 10px 14px 12px;
+    margin: 0 8px;
+    border-radius: 14px;
+    width: calc(100% - 16px);
+  }
+  .hero-title { font-size: 17px; margin-bottom: 3px; }
+  .hero-sub { font-size: 10px; margin-bottom: 8px; }
+  .hero-divider { margin: 6px 0; }
+  .hero-btns { gap: 8px; }
+  .hero-pin-btn { font-size: 13px; padding: 11px 18px; }
+  .hero-explore-btn { font-size: 12px; padding: 9px 18px; }
+  .hero-hint { font-size: 9px; margin-top: 5px; }
 
   .notes-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
   .board { padding: 10px 12px; }
@@ -798,7 +811,6 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 /* Clip wrapper — perfectly square circle */
 .hero-canvas-wrap {
   position: absolute;
-  /* Use vmin so it's always square on any screen */
   width: min(100vmin, calc(100vh - 90px));
   height: min(100vmin, calc(100vh - 90px));
   left: 50%;
@@ -809,11 +821,7 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
   overflow: hidden;
 }
 
-.hero-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+.hero-canvas { display: block; width: 100%; height: 100%; }
 
 .hero-overlay {
   position: absolute;
@@ -822,9 +830,40 @@ body { font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: 5%;  /* card sits inside the globe circle */
+  padding-bottom: 5%;
   pointer-events: none;
   z-index: 10;
+}
+
+/* ── MOBILE HERO OVERRIDE — must come AFTER base rules ── */
+@media (max-width: 768px) {
+  .hero-container { height: calc(100svh - 84px) !important; }
+
+  .hero-canvas-wrap {
+    width: 62vmin !important;
+    height: 62vmin !important;
+    top: 28% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .hero-overlay {
+    justify-content: flex-end !important;
+    padding-bottom: 1% !important;
+  }
+
+  .hero-text-card {
+    padding: 10px 14px 12px !important;
+    margin: 0 8px !important;
+    border-radius: 14px !important;
+    width: calc(100% - 16px) !important;
+    max-width: none !important;
+  }
+  .hero-title { font-size: 17px !important; }
+  .hero-sub { font-size: 10px !important; }
+  .hero-pin-btn { font-size: 13px !important; padding: 11px 18px !important; }
+  .hero-explore-btn { font-size: 12px !important; padding: 9px 18px !important; }
+  .hero-hint { font-size: 9px !important; }
 }
 .hero-text-card {
   background: rgba(20, 10, 40, 0.65);
