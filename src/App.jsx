@@ -766,13 +766,13 @@ function HeroEmpty({ onPin, onExplore }) {
       tc.width = TEX_W; tc.height = TEX_H
       const cx = tc.getContext('2d')
 
-      // Deep blue ocean gradient — NO white anywhere
+      // Bright cyan-blue ocean — like the mockup
       const oceanGrad = cx.createLinearGradient(0, 0, 0, TEX_H)
-      oceanGrad.addColorStop(0,   '#0a3d8f')
-      oceanGrad.addColorStop(0.3, '#1565c0')
-      oceanGrad.addColorStop(0.5, '#1976d2')
-      oceanGrad.addColorStop(0.7, '#1565c0')
-      oceanGrad.addColorStop(1,   '#0d47a1')
+      oceanGrad.addColorStop(0,   '#0097a7')
+      oceanGrad.addColorStop(0.3, '#00acc1')
+      oceanGrad.addColorStop(0.5, '#00bcd4')
+      oceanGrad.addColorStop(0.7, '#00acc1')
+      oceanGrad.addColorStop(1,   '#00838f')
       cx.fillStyle = oceanGrad
       cx.fillRect(0, 0, TEX_W, TEX_H)
 
